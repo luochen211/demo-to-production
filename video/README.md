@@ -8,7 +8,7 @@ One-minute explainer animations embedded in the book. They are drawn in code wit
 | `voice.py` | Synthesizes each line, writes `public/voice.mp3` and `src/timings.json` |
 | `src/Film.jsx`, `src/kit.jsx` | Scenes and shared drawing components |
 | `music.py` | Synthesizes the background music, writes `public/music.mp3` |
-| `public/` | Voiceover and music used by the render |
+| `public/` | Voiceover, music, and the corner avatar and logo (from the luo-chen-com site) |
 
 ```bash
 cd video

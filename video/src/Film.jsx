@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Audio, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import timings from './timings.json';
 import {Arrow, Box, C, Card, Chip, Envelope, FONT, Ledger, Mark, MONO, Node, Order, Pill, Stamp, lerp, pop, ramp, span} from './kit.jsx';
 
@@ -226,6 +226,10 @@ const Chrome = ({t, seg}) => (
           </span>
         );
       })}
+    </Box>
+    <Box x={1080} y={656} w={176} style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8}}>
+      <Img src={staticFile('avatar.jpg')} style={{width: 44, height: 44, borderRadius: 44, objectFit: 'cover', boxShadow: '0 0 0 2px #fff, 0 1px 4px rgba(0,0,0,.18)'}} />
+      <Img src={staticFile('luochen-logo.png')} style={{height: 32}} />
     </Box>
   </>
 );
