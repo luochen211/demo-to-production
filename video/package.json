@@ -1,0 +1,15 @@
+{
+  "name": "demo-to-production-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.jsx",
+    "render": "remotion render src/index.jsx Ch09Callback ../docs/public/book/ch09-callback.mp4 --crf 24"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.509",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "remotion": "4.0.509"
+  }
+}
