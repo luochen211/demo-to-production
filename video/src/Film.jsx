@@ -44,8 +44,10 @@ const Scene1 = ({t}) => {
       <Box x={470} y={104} w={760} o={ramp(t, L[2] + 0.1)} s={pop(t, L[2] + 0.1)} style={{textAlign: 'center', fontSize: 40, fontWeight: 800, color: C.teal}}>算数的是回调</Box>
       <Node x={500} y={218} h={172} title="支付平台" icon={icon.bank} color={C.orange} o={ramp(t, L[2] + 0.9)} s={pop(t, L[2] + 0.9)}>
         <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
-          {[['微信支付', '#07c160'], ['支付宝', '#1677ff']].map(([name, c]) => (
-            <div key={name} style={{display: 'flex', alignItems: 'center', gap: 8, background: c, color: '#fff', borderRadius: 8, padding: '6px 12px', fontSize: 21, fontWeight: 700}}>{name}</div>
+          {[['微信支付', 'wechat.svg'], ['支付宝', 'alipay.svg']].map(([name, file]) => (
+            <div key={name} style={{display: 'flex', alignItems: 'center', gap: 12, fontSize: 23, fontWeight: 700, color: C.ink}}>
+              <Img src={staticFile(file)} style={{width: 36, height: 36}} />{name}
+            </div>
           ))}
         </div>
       </Node>
