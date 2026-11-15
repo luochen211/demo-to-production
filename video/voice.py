@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parent
 SPEED = float(os.environ.get("VOICE_SPEED", "1.15"))
 LEAD, GAP, SEG_GAP, TAIL = 0.35, 0.35, 0.8, 3.0
 BEAT = 0.9375  # two beats of the 128 BPM track; segment cuts land on this grid
-SAY = {"幂等": "密等"}
+SAY = {"幂等": "密等", "38 块": "三十八块", "114": "一百一十四"}
 
 
 def tts(text, out):
