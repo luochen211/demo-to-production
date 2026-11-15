@@ -1,15 +1,12 @@
 import React from 'react';
-import {AbsoluteFill, Audio, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {Img, staticFile} from 'remotion';
 import timings from './timings.json';
-import {Arrow, Box, C, Card, Chip, Envelope, FONT, Ledger, Mark, MONO, Node, Order, Pill, Stamp, lerp, pop, ramp, span} from './kit.jsx';
+import {Arrow, Box, C, Card, Chip, Envelope, Ledger, Mark, MONO, Node, Order, Pill, Stamp, lerp, pop, ramp, span} from '../../src/kit.jsx';
+import {makeFilm} from '../../src/shell.jsx';
 
-const SEG_COLORS = [C.teal, C.orange, C.indigo, C.rose, C.slate];
-const DOTS = ['页', '重', '幂', '序', '合'];
-const NUM = ['①', '②', '③', '④', '⑤'];
+export const ID = 'ch09-callback';
 const L = timings.lines.map((l) => l.start);
 const S2 = timings.segments[1].start + 0.05;
-const VO_END = timings.lines[9].start + timings.lines[9].dur;
-const segEnd = (i) => (i + 1 < timings.segments.length ? timings.segments[i + 1].start : timings.total);
 
 const icon = {
   phone: <svg width="20" height="20" viewBox="0 0 20 20"><rect x="5" y="1.5" width="10" height="17" rx="2.5" fill="none" stroke="#fff" strokeWidth="2" /></svg>,
@@ -218,59 +215,4 @@ const Scene5 = ({t}) => {
   );
 };
 
-const SCENES = [Scene1, Scene2, Scene3, Scene4, Scene5];
-
-const Chrome = ({t, seg}) => (
-  <>
-    <Box x={34} y={26} s={pop(t, timings.segments[seg].start, 0.3)} style={{background: SEG_COLORS[seg], color: '#fff', borderRadius: 8, padding: '5px 14px', fontSize: 19, fontWeight: 700, transformOrigin: 'left center', whiteSpace: 'nowrap'}}>{NUM[seg]} {timings.segments[seg].name}</Box>
-    <Box x={1010} y={30} w={236} style={{display: 'flex', justifyContent: 'flex-end', gap: 10, fontSize: 16, color: C.sub}}>
-      {DOTS.map((d, i) => {
-        const on = i === seg || seg === DOTS.length - 1;
-        return (
-          <span key={i} style={{display: 'flex', alignItems: 'center', gap: 4, color: on ? C.ink : C.sub, fontWeight: on ? 700 : 400}}>
-            <span style={{width: 13, height: 13, borderRadius: 13, boxSizing: 'border-box', background: on ? SEG_COLORS[i] : 'transparent', border: `2px solid ${on ? SEG_COLORS[i] : '#b9c1c9'}`}} />{d}
-          </span>
-        );
-      })}
-    </Box>
-    <Box x={1080} y={656} w={176} style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8}}>
-      <Img src={staticFile('avatar.jpg')} style={{width: 44, height: 44, borderRadius: 44, objectFit: 'cover', boxShadow: '0 0 0 2px #fff, 0 1px 4px rgba(0,0,0,.18)'}} />
-      <Img src={staticFile('luochen-logo.png')} style={{height: 32}} />
-    </Box>
-  </>
-);
-
-const Caption = ({t}) => {
-  const i = timings.lines.findLastIndex((l) => t >= l.start - 0.1);
-  if (i < 0) return null;
-  const line = timings.lines[i];
-  const next = timings.lines[i + 1];
-  const until = next && next.seg === line.seg ? next.start - 0.1 : line.start + line.dur + 0.45;
-  const o = span(t, line.start - 0.1, until, 0.12);
-  return (
-    <Box x={0} y={612} w={1280} o={o} style={{display: 'flex', justifyContent: 'center'}}>
-      <div style={{background: 'rgba(38,46,56,.92)', color: '#fff', borderRadius: 10, padding: '9px 24px', fontSize: 25, lineHeight: 1.45, textAlign: 'center', fontWeight: 500}}>
-        {line.rows.map((r, k) => <div key={k}>{r}</div>)}
-      </div>
-    </Box>
-  );
-};
-
-export const Film = () => {
-  const frame = useCurrentFrame();
-  const {fps, durationInFrames} = useVideoConfig();
-  const t = frame / fps;
-  const seg = timings.segments.findLastIndex((s) => t >= s.start);
-  const Scene = SCENES[seg];
-  const start = timings.segments[seg].start;
-  const sceneO = Math.min(seg === 0 ? 1 : ramp(t, start, 0.25), seg === SCENES.length - 1 ? 1 : 1 - ramp(t, segEnd(seg) - 0.2, 0.2));
-  return (
-    <AbsoluteFill style={{background: `linear-gradient(180deg, #ffffff 0%, ${C.bg} 100%)`, fontFamily: FONT, color: C.ink}}>
-      <div style={{opacity: sceneO}}><Scene t={t} /></div>
-      <Chrome t={t} seg={seg} />
-      <Caption t={t} />
-      <Audio src={staticFile('voice.mp3')} />
-      <Audio src={staticFile('music.mp3')} volume={(f) => 0.16 * interpolate(f, [0, 20, durationInFrames - 60, durationInFrames - 1], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}) * interpolate(f, [VO_END * fps, VO_END * fps + 30], [1, 2.2], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
-    </AbsoluteFill>
-  );
-};
+export const Film = makeFilm({id: ID, timings, scenes: [Scene1, Scene2, Scene3, Scene4, Scene5], dots: ['页', '重', '幂', '序', '合']});
