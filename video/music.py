@@ -15,7 +15,9 @@ import wave
 import numpy as np
 
 SR = 44100
-DUR = 62.0
+HERE_ = os.path.dirname(os.path.abspath(__file__))
+# one second longer than the voiceover timeline, so the bed never runs out
+DUR = float(__import__("json").load(open(os.path.join(HERE_, "src", "timings.json")))["total"]) + 1.0
 N = int(SR * DUR)
 BAR = 4.0  # seconds per chord
 HERE = os.path.dirname(os.path.abspath(__file__))
