@@ -42,8 +42,14 @@ const Scene1 = ({t}) => {
       <Chip x={430} y={290} t={t} at={L[1] + 3.6} until={L[2]} text="网络可能在半路断掉" color={C.red} size={26} />
 
       <Box x={470} y={104} w={760} o={ramp(t, L[2] + 0.1)} s={pop(t, L[2] + 0.1)} style={{textAlign: 'center', fontSize: 40, fontWeight: 800, color: C.teal}}>算数的是回调</Box>
-      <Node x={500} y={226} title="支付平台" icon={icon.bank} color={C.orange} o={ramp(t, L[2] + 0.9)} s={pop(t, L[2] + 0.9)}>
-        <div style={{fontSize: 19, color: C.sub, lineHeight: 1.5}}>微信支付<br />支付宝</div>
+      <Node x={500} y={218} h={172} title="支付平台" icon={icon.bank} color={C.orange} o={ramp(t, L[2] + 0.9)} s={pop(t, L[2] + 0.9)}>
+        <div style={{display: 'flex', flexDirection: 'column', gap: 10}}>
+          {[['微信支付', 'wechat.svg'], ['支付宝', 'alipay.svg']].map(([name, file]) => (
+            <div key={name} style={{display: 'flex', alignItems: 'center', gap: 12, fontSize: 23, fontWeight: 700, color: C.ink}}>
+              <Img src={staticFile(file)} style={{width: 36, height: 36}} />{name}
+            </div>
+          ))}
+        </div>
       </Node>
       <Node x={950} y={196} w={250} h={226} title="你的服务端" icon={icon.server} color={C.teal} o={ramp(t, L[2] + 1.5)} s={pop(t, L[2] + 1.5)}>
         <Order paid={done} flash={span(t, L[2] + 4.4, L[2] + 5.2)} />
@@ -59,7 +65,7 @@ const Scene2 = ({t}) => {
   const arrive = [L[4] + 0.5, L[4] + 2.6, L[4] + 3.7];
   return (
     <>
-      <Node x={110} y={216} title="支付平台" icon={icon.bank} color={C.orange} o={ramp(t, S2)}>
+      <Node x={110} y={216} title="微信 / 支付宝" icon={icon.bank} color={C.orange} o={ramp(t, S2)}>
         <div style={{fontSize: 19, color: C.sub, lineHeight: 1.5}}>通知：<br />#1024 已付 ¥38</div>
       </Node>
       <Node x={560} y={186} w={250} h={226} title="你的服务端" icon={icon.server} color={C.teal} o={ramp(t, S2)}>
