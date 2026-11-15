@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "studio": "remotion studio src/index.jsx",
-    "render": "remotion render src/index.jsx Ch09Callback ../docs/public/book/ch09-callback.mp4 --crf 24"
+    "render": "remotion render src/index.jsx Ch09Callback ../docs/public/book/ch09-callback.mp4 --scale 1.5 --crf 18"
   },
   "dependencies": {
     "@remotion/cli": "4.0.509",
