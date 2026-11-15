@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
-"""Synthesize one clip per subtitle line and write public/voice.mp3 + src/timings.json.
+"""Synthesize one clip per subtitle line for one film.
 
+    python3 voice.py <film-id>
+
+Reads films/<id>/script.json, writes public/<id>/voice.mp3 and films/<id>/timings.json.
 Needs TTS_URL (an OpenAI-style /v1/audio/speech clone endpoint), TTS_TOKEN_FILE,
-TTS_REF_AUDIO and TTS_REF_TEXT in the environment. Clips are cached in voice-cache/.
+TTS_REF_AUDIO and TTS_REF_TEXT, from the environment or from video/.env.local
+(KEY=value lines, git-ignored). Clips are cached in voice-cache/.
 """
-import hashlib, json, math, os, subprocess, wave
+import hashlib, json, math, os, subprocess, sys, wave
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+ENV = ROOT / ".env.local"
+if ENV.exists():
+    for row in ENV.read_text().splitlines():
+        if "=" in row and not row.lstrip().startswith("#"):
+            k, v = row.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip())
 SPEED = float(os.environ.get("VOICE_SPEED", "1.15"))
 LEAD, GAP, SEG_GAP, TAIL = 0.35, 0.35, 0.8, 3.0
-BEAT = 0.9375  # two beats of the 128 BPM track; segment cuts land on this grid
-SAY = {"幂等": "密等", "38 块": "三十八块", "114": "一百一十四"}
+BEAT = 1.2  # two beats at the music's 100 BPM; segment cuts land on this grid
+# spoken forms: subtitles keep the written text, the voice reads these
+SAY = {"幂等": "密等"}  # a film can add more under "say" in its script.json
 
 
 def tts(text, out):
@@ -32,7 +43,10 @@ def wav_len(p):
 
 
 def main():
-    script = json.loads((ROOT / "script.json").read_text())
+    film = sys.argv[1]
+    script = json.loads((ROOT / "films" / film / "script.json").read_text())
+    for k, v in script.get("say", {}).items():
+        SAY[k] = v
     cache = ROOT / "voice-cache"
     cache.mkdir(exist_ok=True)
     t, lines, segs, clips = LEAD, [], [], []
@@ -67,10 +81,10 @@ def main():
         fc.append(f"[{k}:a]adelay={int(at * 1000)}:all=1[a{k}]")
     graph = ";".join(fc) + ";" + "".join(f"[a{k}]" for k in range(len(clips))) + \
         f"amix=inputs={len(clips)}:normalize=0,apad=whole_dur={total:.3f}[out]"
-    (ROOT / "public").mkdir(exist_ok=True)
+    (ROOT / "public" / film).mkdir(parents=True, exist_ok=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", graph, "-map", "[out]",
-                    "-t", f"{total:.3f}", "-b:a", "128k", str(ROOT / "public/voice.mp3")], check=True)
-    (ROOT / "src/timings.json").write_text(json.dumps(
+                    "-t", f"{total:.3f}", "-b:a", "128k", str(ROOT / "public" / film / "voice.mp3")], check=True)
+    (ROOT / "films" / film / "timings.json").write_text(json.dumps(
         {"total": round(total, 3), "title": script["title"], "source": script["source"], "segments": segs, "lines": lines},
         ensure_ascii=False, indent=1) + "\n")
     print(f"OK {total:.1f}s, {len(lines)} lines")
