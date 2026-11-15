@@ -206,7 +206,7 @@ const Scene5 = ({t}) => {
         </React.Fragment>
       ))}
       <Box x={0} y={642} w={1280} o={ramp(t, end + 0.9, 0.5)} style={{textAlign: 'center', fontSize: 15, color: C.sub, lineHeight: 1.7}}>
-        内容出自《从 Demo 到商用》{timings.source}<br />音乐：Laserpack — Kevin MacLeod (incompetech.com) · CC BY 4.0
+        内容出自《从 Demo 到商用》{timings.source}
       </Box>
     </>
   );
