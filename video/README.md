@@ -14,7 +14,7 @@ One-minute explainer animations embedded in the book. They are drawn in code wit
 cd video
 npm install
 npm run studio   # preview
-npm run render   # writes ../docs/public/book/ch09-callback.mp4
+npm run render   # renders at 1x, then writes ../docs/public/book/ch09-callback.mp4 at 1.2x speed
 ```
 
 Re-running `voice.py` is only needed when `script.json` changes. It expects a voice-clone endpoint in `TTS_URL`, plus `TTS_TOKEN_FILE`, `TTS_REF_AUDIO` and `TTS_REF_TEXT`.
